@@ -312,8 +312,8 @@ END:VCALENDAR`;
   const encoded = encodeURIComponent(prefill);
 
   // Deep link (лучше всего на телефонах) + fallback на https
-  const tgDeep = tg://resolve?domain=${CONFIG.telegramUser}&text=${encoded};
-  const tgWeb  = https://t.me/${CONFIG.telegramUser}?text=${encoded};
+  const tgDeep = `tg://resolve?domain=${CONFIG.telegramUser}&text=${encoded}`;
+  const tgWeb  = `https://t.me/${CONFIG.telegramUser}?text=${encoded}`;
 
   // Кнопка "Сказать да" — откроет чат с уже набранным текстом
   const yesBtn = document.createElement("a");
@@ -335,10 +335,10 @@ END:VCALENDAR`;
   chatBtn.className = "btn secondary";
   chatBtn.target = "_blank";
   chatBtn.rel = "noopener";
-  chatBtn.href = https://t.me/${CONFIG.telegramUser};
+  chatBtn.href = `https://t.me/${CONFIG.telegramUser}`;
   chatBtn.textContent = "💬 Открыть чат";
   wrap.appendChild(chatBtn);
-      }
+}
 
       if (CONFIG.whatsappPhone){
         any = true;
