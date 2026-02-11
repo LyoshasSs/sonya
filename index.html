@@ -306,23 +306,38 @@ END:VCALENDAR`;
       let any = false;
 
       if (CONFIG.telegramUser){
-        any = true;
+  any = true;
 
-        const a2 = document.createElement("a");
-        a2.className = "btn";
-        a2.target = "_blank";
-        a2.rel = "noopener";
-        a2.href = `https://t.me/share/url?url=&text=${msgYes}`;
-        a2.textContent = "✅ Сказать «да» в Telegram";
-        wrap.appendChild(a2);
+  const prefill = "Леш, да! Я буду твоей валентинкой на это 14 февраля ❤️‍🩹";
+  const encoded = encodeURIComponent(prefill);
 
-        const a = document.createElement("a");
-        a.className = "btn secondary";
-        a.target = "_blank";
-        a.rel = "noopener";
-        a.href = `https://t.me/${CONFIG.telegramUser}`;
-        a.textContent = "💬 Открыть чат";
-        wrap.appendChild(a);
+  // Deep link (лучше всего на телефонах) + fallback на https
+  const tgDeep = tg://resolve?domain=${CONFIG.telegramUser}&text=${encoded};
+  const tgWeb  = https://t.me/${CONFIG.telegramUser}?text=${encoded};
+
+  // Кнопка "Сказать да" — откроет чат с уже набранным текстом
+  const yesBtn = document.createElement("a");
+  yesBtn.className = "btn";
+  yesBtn.href = tgWeb;              // fallback
+  yesBtn.textContent = "✅ Сказать «да» в Telegram";
+
+  // Пытаемся открыть tg://, если не вышло — останется обычная ссылка
+  yesBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    window.location.href = tgDeep;
+    setTimeout(() => { window.location.href = tgWeb; }, 350);
+  });
+
+  wrap.appendChild(yesBtn);
+
+  // Кнопка "Открыть чат" — без текста
+  const chatBtn = document.createElement("a");
+  chatBtn.className = "btn secondary";
+  chatBtn.target = "_blank";
+  chatBtn.rel = "noopener";
+  chatBtn.href = https://t.me/${CONFIG.telegramUser};
+  chatBtn.textContent = "💬 Открыть чат";
+  wrap.appendChild(chatBtn);
       }
 
       if (CONFIG.whatsappPhone){
